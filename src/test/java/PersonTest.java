@@ -55,7 +55,7 @@ public class PersonTest {
     public void testAddDemeritPoints_ValidData_ReturnsSuccess() {
         // Arrange: Create person with valid data and add to system
         person = new Person("56s_d%&fAB", "John", "Doe", "32|Highland Street|Melbourne|Victoria|Australia", "15-11-1990");
-        person.addPerson(); // Add person to file first
+        person.addPerson(PERSON_FILE); // Add person to file first
         
         // Act: Add valid demerit points
         String result = person.addDemeritPoints("15-03-2024", 3);
@@ -75,7 +75,7 @@ public class PersonTest {
     public void testAddDemeritPoints_InvalidDateFormat_ReturnsFailed() {
         // Arrange: Create person and add to system
         person = new Person("78@#$%^ZAB", "Robert", "Martinez", "82|St Kilda Road|Melbourne|Victoria|Australia", "07-02-1985");
-        person.addPerson();
+        person.addPerson(PERSON_FILE);
         
         // Act: Try to add demerit points with invalid date format (YYYY-MM-DD instead of DD-MM-YYYY)
         String result = person.addDemeritPoints("2024-03-15", 4);
@@ -94,7 +94,7 @@ public class PersonTest {
     public void testAddDemeritPoints_InvalidPointsRange_ReturnsFailed() {
         // Arrange: Create person and add to system
         person = new Person("89#$%&*CDE", "Jennifer", "Rodriguez", "16|Toorak Road|Melbourne|Victoria|Australia", "24-12-1988");
-        person.addPerson();
+        person.addPerson(PERSON_FILE);
         
         // Act: Try to add demerit points outside valid range (7 > 6)
         String result = person.addDemeritPoints("20-06-2024", 7);
@@ -116,7 +116,7 @@ public class PersonTest {
     public void testAddDemeritPoints_Under21Suspension_SetsCorrectSuspension() {
         // Arrange: Create person under 21 (born 2008, about 16 years old)
         person = new Person("92!@#$%FGH", "Kevin", "Lopez", "38|Camberwell Road|Melbourne|Victoria|Australia", "15-08-2008");
-        person.addPerson();
+        person.addPerson(PERSON_FILE);
         
         // Act: Add demerit points that should trigger suspension (4 + 3 = 7 points > 6 for under 21)
         String result1 = person.addDemeritPoints("10-01-2024", 4);
@@ -157,7 +157,7 @@ public class PersonTest {
     public void testAddDemeritPoints_FileContainsCorrectData() {
         // Arrange
         person = new Person("56s_d%&fAB", "John", "Doe", "32|Highland Street|Melbourne|Victoria|Australia", "15-11-1990");
-        person.addPerson();
+        person.addPerson(PERSON_FILE);
         
         // Act
         String result = person.addDemeritPoints("15-03-2024", 3);
@@ -184,7 +184,7 @@ public class PersonTest {
     public void testAddDemeritPoints_Over21SuspensionThreshold() {
         // Arrange: Create person over 21 (born 1990, about 34 years old)
         person = new Person("67s_d%&fAB", "Sarah", "Smith", "45|Collins Street|Melbourne|Victoria|Australia", "15-11-1990");
-        person.addPerson();
+        person.addPerson(PERSON_FILE);
         
         // Act: Add points that would suspend under-21 but not over-21 (total = 8 points)
         String result1 = person.addDemeritPoints("10-01-2024", 4);
@@ -217,7 +217,7 @@ public class PersonTest {
     public void testAddDemeritPoints_BoundaryPoints() {
         // Arrange
         person = new Person("56s_d%&fAB", "John", "Doe", "32|Highland Street|Melbourne|Victoria|Australia", "15-11-1990");
-        person.addPerson();
+        person.addPerson(PERSON_FILE);
         
         // Act & Assert
         assertEquals("Success", person.addDemeritPoints("15-03-2024", 1), "1 point should be valid");
