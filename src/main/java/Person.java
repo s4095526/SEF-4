@@ -1,6 +1,7 @@
 package src.main.java;
-import java.util.HashMap;
-import java.util.Date;
+import java.util.*;
+import java.io.*;
+
 
 public class Person {
     private String personID;
@@ -30,15 +31,69 @@ public class Person {
 
     public boolean addPerson() {
         //TODO: This method adds information about a person to a TXT file.
-        //Condition 1: PersonID should be exactly 10 characters long;
-        //the first two characters should be numbers between 2 and 9, there should be at least two special characters between characters 3 and 8,
-        //and the last two characters should be upper case letters (A - Z). Example: "56s_d%&fAB"
-        //Condition 2: The address of the Person should follow the following format: Street Number|Street|City|State|Country.
-        //The State should be only Victoria. Example: 32|Highland Street|Melbourne|Victoria|Australia.
-        //Condition 3: The format of the birth date of the person should follow the following format: DD-MM-YYYY. Example: 15-11-1990
-        //Instruction: If the Person's information meets the above conditions and any other conditions you may want to consider,
+        //TODO: file name beign written too and if the file exists or not
+        
         //the information should be inserted into a TXT file, and the addPerson function should return true.
         //Otherwise, the information should not be inserted into the TXT file, and the addPerson function should return false.
+        if (personID.length() != 10) {
+            return false; // not 10 characters long
+        }
+
+        if (!personID.matches("[2-9][0-9].6[A-Z]{2}")) {
+            return false; // the placement of charcaters does not match expected 
+        }
+
+        for (int i = 2; i < 8; i++) {
+            int count = 0;
+            char c = personID.charAt(i);
+            if (!Character.isLetterOrDigit(c)) {
+                count ++; 
+            }
+            if (count < 2) {
+                return false; // not enough special characters
+            }
+        }
+
+        if (!address.matches("\\d+\\|[^|]+\\|[^|]+\\|Victoria\\|[^|]+")) {
+            return false; // address format is incorrect
+        }
+
+        if (!birthdate.matches("\\d{2}-\\d{2}-\\d{4}")) {
+            return false; // birthdate format is incorrect
+        }
+
+        if (Integer.parseInt(birthdate.substring(6)) < 1900 || Integer.parseInt(birthdate.substring(6)) > 2025) {
+            return false; // birth year is not valid
+        }
+
+        if (Integer.parseInt(birthdate.substring(3, 5)) < 1 || Integer.parseInt(birthdate.substring(3, 5)) > 12) {
+            return false; // month is not valid
+        }
+
+        if (Integer.parseInt(birthdate.substring(0, 2)) < 1 || Integer.parseInt(birthdate.substring(0, 2)) > 31) {
+            return false; // day is not valid
+        }
+       
+        // txt file writing now ** NOT FINISHED **
+        String fileTxt = "PersonID: " + personID + "\n" +
+                            "First Name: " + firstName + "\n" +
+                            "Last Name: " + lastName + "\n" +
+                            "Address: " + address + "\n" +
+                            "Birthdate: " + birthdate + "\n";
+        System.out.println("Writing to file: \n" + fileTxt);
+        
+        File file = new File("person.txt"); // NEED TO CHJANGE DEPDNMFIN ON FILE
+        try {
+            if (!file.exists()) {
+                file.createNewFile(); // Create the file if it does not exist
+            }
+            FileWriter fileWriter = new FileWriter(file, true); // open in append mode
+            fileWriter.write(fileTxt);
+        } catch (Exception e) {
+            System.out.println("Could not create or write to file: " + e.getMessage());
+            return false;
+        }
+
         return true;
     }
     
