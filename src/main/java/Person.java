@@ -29,7 +29,7 @@ public class Person {
         this.isSuspended = false;
     }
 
-    public boolean addPerson() {
+    public boolean addPerson(String fileName) {
         //TODO: This method adds information about a person to a TXT file.
         //TODO: file name beign written too and if the file exists or not
         
@@ -82,12 +82,8 @@ public class Person {
                             "Birthdate: " + birthdate + "\n";
         System.out.println("Writing to file: \n" + fileTxt);
         
-        File file = new File("person.txt"); // NEED TO CHJANGE DEPDNMFIN ON FILE
         try {
-            if (!file.exists()) {
-                file.createNewFile(); // Create the file if it does not exist
-            }
-            FileWriter fileWriter = new FileWriter(file, true); // open in append mode
+            FileWriter fileWriter = new FileWriter(fileName, true); // open in append mode
             fileWriter.write(fileTxt);
         } catch (Exception e) {
             System.out.println("Could not create or write to file: " + e.getMessage());
