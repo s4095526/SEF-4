@@ -1,4 +1,3 @@
-package src.test.java;
 import org.junit.jupiter.api.*;
 import java.io.*;
 import java.nio.file.*;
@@ -63,6 +62,7 @@ public class PersonTest {
         
         // Assert: Should return "Success"
         assertEquals("Success", result, "addDemeritPoints should return 'Success' for valid data");
+        assertTrue(new File(DEMERIT_FILE).exists(), "Demerit points file should be created");
     }
     
     /**
@@ -147,6 +147,85 @@ public class PersonTest {
         // Assert: Should return "Failed"
         assertEquals("Failed", result, "addDemeritPoints should return 'Failed' for non-existent person");
     }
+    
+    // Helper test
+    
+    /**
+     * Test Case 6: Test that demerit points file contains correct data
+     */
+    @Test
+    public void testAddDemeritPoints_FileContainsCorrectData() {
+        // Arrange
+        person = new Person("56s_d%&fAB", "John", "Doe", "32|Highland Street|Melbourne|Victoria|Australia", "15-11-1990");
+        person.addPerson();
+        
+        // Act
+        String result = person.addDemeritPoints("15-03-2024", 3);
+        
+        // Assert
+        assertEquals("Success", result);
+        
+        // Check file contents
+        try (BufferedReader reader = new BufferedReader(new FileReader(DEMERIT_FILE))) {
+            String line = reader.readLine();
+            assertNotNull(line, "Demerit file should contain at least one line");
+            assertTrue(line.contains("56s_d%&fAB"), "Line should contain person ID");
+            assertTrue(line.contains("15-03-2024"), "Line should contain offense date");
+            assertTrue(line.contains("3"), "Line should contain points");
+        } catch (IOException e) {
+            fail("Should be able to read demerit points file");
+        }
+    }
+    
+    /**
+     * Test Case 7: Test suspension threshold for person over 21
+     */
+    @Test
+    public void testAddDemeritPoints_Over21SuspensionThreshold() {
+        // Arrange: Create person over 21 (born 1990, about 34 years old)
+        person = new Person("67s_d%&fAB", "Sarah", "Smith", "45|Collins Street|Melbourne|Victoria|Australia", "15-11-1990");
+        person.addPerson();
+        
+        // Act: Add points that would suspend under-21 but not over-21 (total = 8 points)
+        String result1 = person.addDemeritPoints("10-01-2024", 4);
+        String result2 = person.addDemeritPoints("15-01-2024", 4);
+        
+        // Assert: Should succeed but not be suspended (8 points < 12 for over 21)
+        assertEquals("Success", result1);
+        assertEquals("Success", result2);
+        assertFalse(person.isSuspended(), "Person over 21 with 8 points should not be suspended");
+    }
+    
+    /**
+     * Test Case 8: Test empty/null date handling
+     */
+    @Test
+    public void testAddDemeritPoints_EmptyDate_ReturnsFailed() {
+        // Arrange
+        person = new Person("56s_d%&fAB", "John", "Doe", "32|Highland Street|Melbourne|Victoria|Australia", "15-11-1990");
+        person.addPerson();
+        
+        // Act & Assert
+        assertEquals("Failed", person.addDemeritPoints("", 3), "Empty date should return Failed");
+        assertEquals("Failed", person.addDemeritPoints(null, 3), "Null date should return Failed");
+    }
+    
+    /**
+     * Test Case 9: Test boundary values for points
+     */
+    @Test
+    public void testAddDemeritPoints_BoundaryPoints() {
+        // Arrange
+        person = new Person("56s_d%&fAB", "John", "Doe", "32|Highland Street|Melbourne|Victoria|Australia", "15-11-1990");
+        person.addPerson();
+        
+        // Act & Assert
+        assertEquals("Success", person.addDemeritPoints("15-03-2024", 1), "1 point should be valid");
+        assertEquals("Success", person.addDemeritPoints("16-03-2024", 6), "6 points should be valid");
+        assertEquals("Failed", person.addDemeritPoints("17-03-2024", 0), "0 points should be invalid");
+        assertEquals("Failed", person.addDemeritPoints("18-03-2024", 7), "7 points should be invalid");
+    }
+
 
     /**
      addPerson() tests
