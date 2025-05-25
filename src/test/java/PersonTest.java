@@ -147,4 +147,96 @@ public class PersonTest {
         // Assert: Should return "Failed"
         assertEquals("Failed", result, "addDemeritPoints should return 'Failed' for non-existent person");
     }
+
+    /**
+     addPerson() tests
+     */
+
+       /**
+     * Test Case 1: failed personID conditions should return Failed
+     * Test Data: Person("364!eyfIu", "Alice", "Smith", "14|Lonsdale street|Melbourne|Victoria|Australia", "18-10-1992")
+     * Expected Result: "Failed"
+     */
+    @Test
+    public void testAddPerson_personIDConditions_ReturnsFailed() {
+        // Arrange: Create person with invalid ID (not 10 characters, does not have 2 special charcaters betwen 3-8th character and last charcter is not a capital letter)
+        person = new Person("364!eyfIu", "Alice", "Smith", "14|Lonsdale street|Melbourne|Victoria|Australia", "18-10-1992");
+        
+        // Act: Try to add person despite personID conditions
+        boolean result = person.addPerson(PERSON_FILE);
+        
+        // Assert: Should return false due to ID condition not being met
+        assertFalse(result, "addPerson should return false for not meeting conditions of personID");
+    }
+
+    /**
+     * Test Case 2: failed adress conditions should return Failed
+     * Test Data: Person("364!eyfIu", "A1ice", "Smith", "14|Lonsdale street|Tasmania|Victoria|Australia", "18-10-1992")
+     * Expected Result: "Failed"
+     */
+    @Test
+    public void testAddPerson_addressConditions_ReturnsFailed() {
+        // Arrange: Create person with invalid address (contains number in first character of first name)
+        person = new Person("364!ey&yIU", "A1ice", "Smith", "14|Lonsdale street|Melbourne|Tasmania|Australia", "18-10-1992");
+        
+        // Act: Try to add person despite address conditions
+        boolean result = person.addPerson(PERSON_FILE);
+        
+        // Assert: Should return false due to address condition not being met
+        assertFalse(result, "addPerson should return false for not meeting conditions of address");
+    }
+
+    /**
+     * Test Case 3: failed birthdate conditions should return Failed
+     * Test Data: Person("364!ey&yIU", "Alice", "Smith", "14|Lonsdale street|Melbourne|Victoria|Australia", "10-18-2025")
+     * Expected Result: "Failed"
+     */
+    @Test
+    public void testAddPerson_birthdateConditions_ReturnsFailed() {
+        // Arrange: Create person with invalid birthdate (day and month are swapped)
+        person = new Person("364!ey&yIU", "Alice", "Smith", "14|Lonsdale street|Melbourne|Victoria|Australia", "10-18-2025");
+        
+        // Act: Try to add person despite birthdate conditions
+        boolean result = person.addPerson(PERSON_FILE);
+        
+        // Assert: Should return false due to birthdate condition not being met
+        assertFalse(result, "addPerson should return false for not meeting conditions of birthdate");
+    }
+
+    /**
+     * Test Case 4: cehck that a valid person can be added successfully to the txt file
+     * Test Data: Person("364!ey&yIU", "Alice", "Smith", "14|Lonsdale street|Melbourne|Victoria|Australia", "18-10-1992")
+     * Expected Result: "Success"
+     */
+    @Test
+    public void testAddPerson_ValidData_ReturnsSuccess() {
+        // Arrange: Create person with valid data
+        person = new Person("364!ey&yIU", "Alice", "Smith", "14|Lonsdale street|Melbourne|Victoria|Australia", "18-10-1992");
+        
+        // Act: Try to add person with valid data
+        boolean result = person.addPerson(PERSON_FILE);
+        
+        // Assert: Should return true indicating success
+        assertTrue(result, "addPerson should return true for valid person data");
+        
+        // Verify that the person was added to the file
+        assertTrue(Files.exists(Paths.get(PERSON_FILE)), "Person file should exist after adding valid person");
+    }
+
+    /**
+     * Test Case 5: Check that a person with more than 10 characters in personID fails to be added
+     * Test Data: Person("364!y&yIU", "Charlie", "Brown", "22|Collins street|Melbourne|Victoria|Australia", "20-05-1990")
+     * Expected Result: "Failed"
+     */
+    @Test
+    public void testAddPerson_TooLongPersonID_ReturnsFailed() {
+        // Arrange: Create person with personID longer than 10 characters
+        person = new Person("364!y&yIU", "Charlie", "Brown", "22|Collins street|Melbourne|Victoria|Australia", "20-05-1990");
+        // Act: Try to add person with too long personID
+        boolean result = person.addPerson(PERSON_FILE);
+        // Assert: Should return false due to personID length condition not being met
+        assertFalse(result, "addPerson should return false for personID longer than 10 characters");
+        // Verify that the person was NOT added to the file
+        assertFalse(Files.exists(Paths.get(PERSON_FILE)), "Person file should NOT exist after trying to add invalid person");
+    }   
 }
