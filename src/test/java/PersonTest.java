@@ -346,16 +346,16 @@ public class PersonTest {
     /**
      * Test Case 2: Changing both birthdate and another field (last name) should fail.
      * Test Data:
-     *   - Person: ("34AB1CDEFG", "Alice", "Smith", "123|Main Street|Melbourne|Victoria|3000", "01-01-2000")
+     *   - Person: ("56s_d%&fAB", "Alice", "Smith", "123|Main Street|Melbourne|Victoria|3000", "01-01-2000")
      *   - Update: change last name and birthdate
      * Expected Result: false (update should fail)
      */
     @Test
-    public void testUpdateFailsWhenLastNameChangesWithBirthdate() {
-        Person p = new Person("34AB1CDEFG", "Alice", "Smith", "123|Main Street|Melbourne|Victoria|3000", "01-01-2000");
+    public void testUpdatePersonalDetails_BirthdateAndOtherChangeAttempt() {
+        Person p = new Person("56s_d%&fAB", "Alice", "Smith", "123|Main Street|Melbourne|Victoria|3000", "01-01-2000");
         person.addPerson(PERSON_FILE);
         boolean result = p.updatePersonalDetails(
-            "34AB1CDEFG",                                 
+            "56s_d%&fAB",                                 
             "Alice",                                     
             "Johnson",                                     // changed last name
             "123|Main Street|Melbourne|Victoria|3000",  

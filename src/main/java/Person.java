@@ -157,7 +157,7 @@ public class Person {
         if (newID.length() != 10){
             return false;
         }
-        if (!newID.matches("[2-9][0-9].*[^a-zA-Z0-9].*[^a-sA-Z0-9].*[A-Z]{2}")){
+        if (!newID.matches("[2-9][0-9].*[^a-zA-Z0-9].*[^A-Z0-9].*[A-Z]{2}")){
             return false;
         }
         
