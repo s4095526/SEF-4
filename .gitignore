@@ -1,0 +1,17 @@
+# Maven build files
+target/
+
+# Java compiled files
+*.class
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Unsure if we should commit new text files each time?
+*.txt
