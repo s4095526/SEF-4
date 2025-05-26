@@ -318,4 +318,74 @@ public class PersonTest {
         // Verify that the person was NOT added to the file
         assertFalse(Files.exists(Paths.get(PERSON_FILE)), "Person file should NOT exist after trying to add invalid person");
     }   
+
+    /**
+     * updatePersonDetails tests
+     */
+
+     /**
+      * Test Case 1: Check that an individual under 18 is unable to change address
+      * Test Data: 
+      *     Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-2010")
+      *     person.updatePersonalDetails("56s_d%&fAB", "John", "Doe", "456|New St|Melbourne|Victoria|Australia", "15-11-2010")
+      * Expected result: "Failed"
+      */
+    @Test
+    public void testUpdatePersonalDetails_Under18CannotChangeAddress() {
+        Person person = new Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-2010");
+        assertFalse(person.updatePersonalDetails("56s_d%&fAB", "John", "Doe", "456|New St|Melbourne|Victoria|Australia", "15-11-2010"));
+    }
+
+
+     /**
+      * Test Case 2: Check that you can change one field on its own
+      * Test Data: 
+      *     Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990")
+      *     person.updatePersonalDetails("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "20-11-1990")
+      * Expected result: "Success"
+      */
+    @Test
+    public void testUpdatePersonalDetails_ChangeBirthdateOnly() {
+        Person person = new Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990");
+        assertTrue(person.updatePersonalDetails("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "20-11-1990"));
+    }
+
+     /**
+      * Test Case 1: Check that an individual under 18 is unable to change address
+      * Test Data: 
+      *     Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-2010")
+      *     person.updatePersonalDetails("56s_d%&fAB", "John", "Doe", "456|New St|Melbourne|Victoria|Australia", "15-11-2010")
+      * Expected result: "Failed"
+      */
+    @Test
+    public void testUpdatePersonalDetails_EvenFirstDigitCannotChangeID() {
+        Person person = new Person("46s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990");
+        assertFalse(person.updatePersonalDetails("66s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990"));
+    }
+
+     /**
+      * Test Case 1: Check that an individual under 18 is unable to change address
+      * Test Data: 
+      *     Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-2010")
+      *     person.updatePersonalDetails("56s_d%&fAB", "John", "Doe", "456|New St|Melbourne|Victoria|Australia", "15-11-2010")
+      * Expected result: "Success"
+      */
+    @Test
+    public void testUpdatePersonalDetails_ValidUpdate() {
+        Person person = new Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990");
+        assertTrue(person.updatePersonalDetails("56s_d%&fXY", "Jane", "Smith", "456|New St|Melbourne|Victoria|Australia", "15-11-1990"));
+    }
+
+     /**
+      * Test Case 1: Check that an individual under 18 is unable to change address
+      * Test Data: 
+      *     Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-2010")
+      *     person.updatePersonalDetails("56s_d%&fAB", "John", "Doe", "456|New St|Melbourne|Victoria|Australia", "15-11-2010")
+      * Expected result: "Failed"
+      */
+    @Test
+    public void testUpdatePersonalDetails_InvalidAddressFormat() {
+        Person person = new Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990");
+        assertFalse(person.updatePersonalDetails("56s_d%&fAB", "John", "Doe", "Invalid Address Format", "15-11-1990"));
+    }
 }
