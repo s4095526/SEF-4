@@ -113,7 +113,37 @@ public class Person {
         //Instruction: If the Person's updated information meets the above conditions and any other conditions you may want to consider,
         //the Person's information should be updated in the TXT file with the updated information, and the updatePersonalDetails function should return true.
         //Otherwise, the Person's information should not be updated in the TXT file, and the updatePersonalDetails function should return false.
-        return true;
+      boolean wasUpdated = false;
+
+        // 0: Read txt file, create a temporary copy (for editing and comparison)
+
+        // 1: Validation check - see if values from addPerson are legal\
+       
+        // 2: Check the 3 conditions for 'updatePersonalDetails'
+
+
+        // 2.1: Under 18? Address cannot be changed
+
+
+        // 2.2: Changing birthday? Other values cannot be edited
+
+
+        // 2.3 : ID First number is even? ID number cannot be changed
+
+
+        // 3: Validate conditions / DEBUG
+
+
+        // 4: Change values + update txt file
+
+
+        // 5: Validate that only ID, First Name, Last Name, address or birthday was changed (compare against original txt)
+
+
+        // 6: Update status of wasUpdated
+
+
+        return wasUpdated; // return true/false
     }
 
     /**
