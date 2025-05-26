@@ -97,16 +97,12 @@ public class Person {
         }
        
         // txt file writing now ** NOT FINISHED **
-        String fileTxt = "PersonID: " + personID + "\n" +
-                            "First Name: " + firstName + "\n" +
-                            "Last Name: " + lastName + "\n" +
-                            "Address: " + address + "\n" +
-                            "Birthdate: " + birthdate + "\n";
-        System.out.println("Writing to file: \n" + fileTxt);
+        
+        String filetxt = personID + "|" + firstName + "|" + lastName + "|" + address + "|" + birthdate + "|" + isSuspended + "\n";
         
         try {
             try (FileWriter fileWriter = new FileWriter(fileName, true)) {
-                fileWriter.write(fileTxt);
+                fileWriter.write(filetxt);
             }
         } catch (Exception e) {
             System.out.println("Could not create or write to file: " + e.getMessage());
