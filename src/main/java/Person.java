@@ -107,7 +107,7 @@ public class Person {
     }
     
     public boolean updatePersonalDetails(String newID, String newFirstName, String newLastName, String newAddress, String newBirthdate) {
-        //TODO: This method allows updating a given person's ID, firstName, lastName, address and birthday in a TXT file.
+        //This method allows updating a given person's ID, firstName, lastName, address and birthday in a TXT file.
         //Changing personal details will not affect their demerit points or the suspension status.
         // All relevant conditions discussed for the addPerson function also need to be considered and checked in the updatePerson function.
         //Condition 1: If a person is under 18, their address cannot be changed.
@@ -125,7 +125,7 @@ public class Person {
             if (!newID.equals(this.personID) || !newFirstName.equals(this.firstName) || !newLastName.equals(this.lastName) || !newAddress.equals(this.address)){
                 this.birthdate = newBirthdate;
                 return false;
-            }
+            } 
         }
 
         //Condition 3: If first digit of ID is even, ID cannot be changed
