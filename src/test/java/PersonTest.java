@@ -350,7 +350,7 @@ public class PersonTest {
      * Expected Result: false (update should fail)
      */
     @Test
-    public void testUpdateFailsWhenLastNameChangesWithBirthdate() {
+    public void testUpdatePersonalDetails_changingBirthdateAndAnotherField() {
         Person p = new Person("34AB1CDEFG", "Alice", "Smith", "123|Main Street|Melbourne|Victoria|3000", "01-01-2000");
 
         boolean result = p.updatePersonalDetails(
