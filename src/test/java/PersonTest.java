@@ -203,7 +203,7 @@ public class PersonTest {
     public void testAddDemeritPoints_EmptyDate_ReturnsFailed() {
         // Arrange
         person = new Person("56s_d%&fAB", "John", "Doe", "32|Highland Street|Melbourne|Victoria|Australia", "15-11-1990");
-        person.addPerson();
+        person.addPerson(PERSON_FILE);
         
         // Act & Assert
         assertEquals("Failed", person.addDemeritPoints("", 3), "Empty date should return Failed");
