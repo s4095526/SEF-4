@@ -1,6 +1,8 @@
 import java.util.HashMap;
+import java.util.List;
 import java.util.Date;
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
@@ -39,7 +41,7 @@ public class Person {
         DATE_FORMAT.setLenient(false);
     }
 
-     public boolean addPerson(String fileName) {
+    public boolean addPerson(String fileName) {
         //TODO: This method adds information about a person to a TXT file.
         //TODO: file name beign written too and if the file exists or not
         
@@ -93,8 +95,9 @@ public class Person {
         System.out.println("Writing to file: \n" + fileTxt);
         
         try {
-            FileWriter fileWriter = new FileWriter(fileName, true); // open in append mode
-            fileWriter.write(fileTxt);
+            try (FileWriter fileWriter = new FileWriter(fileName, true)) {
+                fileWriter.write(fileTxt);
+            }
         } catch (Exception e) {
             System.out.println("Could not create or write to file: " + e.getMessage());
             return false;
@@ -103,7 +106,7 @@ public class Person {
         return true;
     }
     
-    public boolean updatePersonalDetails() {
+    public boolean updatePersonalDetails(String newID, String newFirstName, String newLastName, String newAddress, String newBirthdate) {
         //TODO: This method allows updating a given person's ID, firstName, lastName, address and birthday in a TXT file.
         //Changing personal details will not affect their demerit points or the suspension status.
         // All relevant conditions discussed for the addPerson function also need to be considered and checked in the updatePerson function.
@@ -113,37 +116,114 @@ public class Person {
         //Instruction: If the Person's updated information meets the above conditions and any other conditions you may want to consider,
         //the Person's information should be updated in the TXT file with the updated information, and the updatePersonalDetails function should return true.
         //Otherwise, the Person's information should not be updated in the TXT file, and the updatePersonalDetails function should return false.
-      boolean wasUpdated = false;
+        if (!personExists(this.personID)){
+            return false;
+        }
 
-        // 0: Read txt file, create a temporary copy (for editing and comparison)
+        //Condition 2: Birthdate changed, no other fields can change
+        if (!this.birthdate.equals(newBirthdate)){
+            if (!newID.equals(this.personID) || !newFirstName.equals(this.firstName) || !newLastName.equals(this.lastName) || !newAddress.equals(this.address)){
+                this.birthdate = newBirthdate;
+                return false;
+            }
+        }
 
-        // 1: Validation check - see if values from addPerson are legal\
-       
-        // 2: Check the 3 conditions for 'updatePersonalDetails'
+        //Condition 3: If first digit of ID is even, ID cannot be changed
+        if (!this.personID.equals(newID)){
+            char firstChar = this.personID.charAt(0);
+            if (Character.isDigit(firstChar) && Integer.parseInt(String.valueOf(firstChar)) % 2 == 0){
+                return false;
+            }
+        }
 
+        //Condition 1: If under 18, address cannot be changed
+        int age = calculateAge(this.birthdate);
+        if (age < 18 && !this.address.equals(newAddress)){
+            return false;
+        }
 
-        // 2.1: Under 18? Address cannot be changed
+        //Validate all new fields meet the same conditions as addPerson
+        //Validate newID
+        if (newID.length() != 10){
+            return false;
+        }
+        if (!newID.matches("[2-9][0-9].*[^a-zA-Z0-9].*[^a-sA-Z0-9].*[A-Z]{2}")){
+            return false;
+        }
+        
+        // Validate new address format
+        if (!newAddress.matches("\\d+\\|[^|]+\\|[^|]+\\|Victoria\\|[^|]+")) {
+            return false;
+        }
 
+        //Validate new birthdate format
+        if (!newBirthdate.matches("\\d{2}-\\d{2}-\\d{4}")){
+            return false;
+        }
 
-        // 2.2: Changing birthday? Other values cannot be edited
+        try {
+            int day = Integer.parseInt(newBirthdate.substring(0, 2));
+            int month = Integer.parseInt(newBirthdate.substring(3, 5));
+            int year = Integer.parseInt(newBirthdate.substring(6));
 
+            if (year < 1900 || year > 2025) return false;
+            if (month < 1 || month > 12) return false;
+            if (day < 1 || day > 31) return false;
 
-        // 2.3 : ID First number is even? ID number cannot be changed
+            //Additional validations
+            Calendar cal = Calendar.getInstance();
+            cal.setLenient(false);
+            cal.set(year, month - 1, day);
+            cal.getTime(); //check if date is invalid
+        } catch (Exception e){
+            return false;
+        }
 
+        //All validations passed
+        this.personID = newID;
+        this.firstName = newFirstName;
+        this.lastName = newLastName;
+        this.address = newAddress;
+        this.birthdate = newBirthdate;
 
-        // 3: Validate conditions / DEBUG
+        // Update the file
+        return updatePersonInFile();
+    }
 
+    private boolean updatePersonInFile () {
+        try {
+            // read all persons
+            List<String> lines = new ArrayList<>();
+            boolean personFound = false;
 
-        // 4: Change values + update txt file
+            try (BufferedReader reader = new BufferedReader(new FileReader(PERSON_FILE))) {
+                String line;
+                while ((line = reader.readLine()) != null){
+                    String[] parts = line.split("\\|");
+                    if (parts.length >= 6 && parts[0].equals(this.personID)) {
+                        //Update record
+                        line = String.join("|", this.personID, this.firstName, this.lastName, this.address, this.birthdate, String.valueOf(this.isSuspended));
+                        personFound = true;
+                    }
+                    lines.add(line);
+                }
+            }
+            if (!personFound) {
+                return false;
+            }
 
+            // Wrtie all persons back to the file
+            try (PrintWriter writer = new PrintWriter(new FileWriter(PERSON_FILE))){
+                for (String line : lines){
+                    writer.println(line);
+                }
+            }
 
-        // 5: Validate that only ID, First Name, Last Name, address or birthday was changed (compare against original txt)
-
-
-        // 6: Update status of wasUpdated
-
-
-        return wasUpdated; // return true/false
+            return true;
+        } catch (IOException e) {
+            System.out.println("Error updating person details: " + e.getMessage());
+            return false;
+        }
     }
 
     /**
