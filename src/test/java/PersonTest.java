@@ -319,7 +319,7 @@ public class PersonTest {
         assertFalse(Files.exists(Paths.get(PERSON_FILE)), "Person file should NOT exist after trying to add invalid person");
     }   
 
-    /**
+ /**
      * updatePersonalDetails Tests
      */
     
@@ -333,6 +333,7 @@ public class PersonTest {
     @Test
     public void testUpdatePersonalDetails_Under18CannotChangeAddress() {
         Person person = new Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-2010"); //Under 18 years
+        person.addPerson(PERSON_FILE);
         assertFalse(person.updatePersonalDetails(
             "56s_d%&fAB",
             "John",
@@ -352,7 +353,7 @@ public class PersonTest {
     @Test
     public void testUpdateFailsWhenLastNameChangesWithBirthdate() {
         Person p = new Person("34AB1CDEFG", "Alice", "Smith", "123|Main Street|Melbourne|Victoria|3000", "01-01-2000");
-
+        person.addPerson(PERSON_FILE);
         boolean result = p.updatePersonalDetails(
             "34AB1CDEFG",                                 
             "Alice",                                     
@@ -376,6 +377,7 @@ public class PersonTest {
     @Test
     public void testUpdatePersonalDetails_EvenFirstDigitCannotChangeID() {
         Person person = new Person("46s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990");
+        person.addPerson(PERSON_FILE);
         assertFalse(person.updatePersonalDetails(
             "56s_d%&fAB",               // Attempt to change ID even though the original started with an even digit
             "John",         
@@ -395,6 +397,7 @@ public class PersonTest {
     @Test
     public void testUpdatePersonalDetails_NoChanges() {
         Person person = new Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990");
+        person.addPerson(PERSON_FILE);
         assertFalse(person.updatePersonalDetails(
             "56s_d%&fAB",   // SAME
             "John",     // SAME
@@ -414,6 +417,7 @@ public class PersonTest {
     @Test
     public void testUpdatePersonalDetails_InvalidAddressFormat() {
         Person person = new Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990");
+        person.addPerson(PERSON_FILE);
         assertFalse(person.updatePersonalDetails(
             "56s_d%&fAB",
             "John",
