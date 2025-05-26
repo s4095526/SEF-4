@@ -47,23 +47,33 @@ public class Person {
         
         //the information should be inserted into a TXT file, and the addPerson function should return true.
         //Otherwise, the information should not be inserted into the TXT file, and the addPerson function should return false.
+        // Validate personID: exactly 10 characters
         if (personID.length() != 10) {
-            return false; // not 10 characters long
+            return false;
         }
-
-        if (!personID.matches("[2-9][0-9].6[A-Z]{2}")) {
-            return false; // the placement of charcaters does not match expected 
+        // First two characters should be digits between 2 and 9
+        if (!Character.isDigit(personID.charAt(0)) || !Character.isDigit(personID.charAt(1))) {
+            return false;
         }
-
+        int firstDigit = Character.getNumericValue(personID.charAt(0));
+        int secondDigit = Character.getNumericValue(personID.charAt(1));
+        if (firstDigit < 2 || firstDigit > 9 || secondDigit < 2 || secondDigit > 9) {
+            return false;
+        }
+        // At least two special characters between characters 3 and 8 (index 2 to 7)
+        int specialCount = 0;
         for (int i = 2; i < 8; i++) {
-            int count = 0;
             char c = personID.charAt(i);
             if (!Character.isLetterOrDigit(c)) {
-                count ++; 
+                specialCount++;
             }
-            if (count < 2) {
-                return false; // not enough special characters
-            }
+        }
+        if (specialCount < 2) {
+            return false;
+        }
+        // Last two characters should be uppercase letters (A-Z)
+        if (!Character.isUpperCase(personID.charAt(8)) || !Character.isUpperCase(personID.charAt(9))) {
+            return false;
         }
 
         if (!address.matches("\\d+\\|[^|]+\\|[^|]+\\|Victoria\\|[^|]+")) {
