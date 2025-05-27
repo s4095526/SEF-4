@@ -388,21 +388,21 @@ public class PersonTest {
     /**
      * Test Case 2: Changing both birthdate and another field (last name) should fail.
      * Test Data:
-     *   - Person: ("35b$e@rjLK", "Alice", "Smith", "77|River Road|Melbourne|Victoria|Australia", "01-01-2000")
+     *   - Person: ("35b$e@rjLK", "Allie", "Smith", "77|River Road|Melbourne|Victoria|Australia", "01-01-2000")
      *   - Update: change last name and birthdate
      * Expected Result: false (update should fail)
      * @throws InterruptedException 
      */
     @Test
     public void testUpdatePersonalDetails_BirthdateAndOtherChangeAttempt() throws InterruptedException {
-        Person person = new Person("35b$e@rjLK", "Alice", "Smith", "77|River Road|Melbourne|Victoria|Australia", "01-01-2000");
+        Person person = new Person("35b$e@rjLK", "Allie", "Smith", "77|River Road|Melbourne|Victoria|Australia", "01-01-2000");
         person.addPerson(PERSON_FILE);
         Thread.sleep(500);
 
         boolean result = person.updatePersonalDetails(
             "35b$e@rjLK",
             "35b$e@rjLK",
-            "Alice",
+            "Allie",
             "Johnson",      // Attempt to change last name
             "77|River Road|Melbourne|Victoria|Australia",
             "02-02-2001"   // Attempt to change birthday
