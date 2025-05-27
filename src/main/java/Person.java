@@ -315,7 +315,7 @@ public class Person {
      * @param personID the person ID to check
      * @return true if person exists, false otherwise
      */
-    private boolean personExists(String personID) {
+    protected boolean personExists(String personID) {
         if (personID == null) {
             return false;
         }
