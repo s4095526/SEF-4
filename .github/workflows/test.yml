@@ -34,18 +34,14 @@ jobs:
         if: always() #always runs even if it fails
         run: |
           echo "=== TXT File in Repo ==="
-          ls -l *.txt || echo "No txt files found"
-          for file in *.txt; do
-            echo "--- $file ---"
-            cat "$file"
           done
 
-      - name: Upload all .txt files in root
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: root-txt-files
-          path: "*.txt"
+      # - name: Upload all .txt files in root
+      #   if: always()
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: root-txt-files
+      #     path: "*.txt"
  
   another-job:
     runs-on: ubuntu-latest
