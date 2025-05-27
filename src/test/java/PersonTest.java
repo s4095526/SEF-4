@@ -474,20 +474,20 @@ public class PersonTest {
     /**
      * Test Case 5: Check with invalid address format (testing addPerson formats).
      * Test Data:
-     *   - Person("91g*e#xvKL", "Fatima", "Rahman", "999|Pine Crescent|Melbourne|Victoria|Australia", "15-11-1990")
+     *   - Person("45b$e@rjLK", "Fatima", "Rahman", "999|Pine Crescent|Melbourne|Victoria|Australia", "15-11-1990")
      *   - Update: invalid address format
      * Expected Result: false (update should fail)
      * @throws InterruptedException 
      */
     @Test
     public void testUpdatePersonalDetails_InvalidAddressFormat() throws InterruptedException {
-        Person person = new Person("91g*e#xvKL", "Fatima", "Rahman", "999|Pine Crescent|Melbourne|Victoria|Australia", "15-11-1990");
+        Person person = new Person("45b$e@rjLK", "Fatima", "Rahman", "999|Pine Crescent|Melbourne|Victoria|Australia", "15-11-1990");
         person.addPerson(PERSON_FILE);
         Thread.sleep(500);
 
         assertFalse(person.updatePersonalDetails(
-            "91g*e#xvKL",
-            "91g*e#xvKL",
+            "45b$e@rjLK",
+            "45b$e@rjLK",
             "Fatima",
             "Rahman",
             "Just an address with no format",       // Attempt to input an illegally formatted address
