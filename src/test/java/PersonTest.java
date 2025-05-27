@@ -37,7 +37,7 @@ public class PersonTest {
     @AfterEach
     public void pausing() {
         try {
-            Thread.sleep(2000);
+            Thread.sleep(500);
 
             // Clean up files before each test
             deleteFileIfExists(PERSON_FILE);
