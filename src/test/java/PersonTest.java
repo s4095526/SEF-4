@@ -4,8 +4,14 @@ import java.nio.file.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for Person class - addDemeritPoints function
+ * Test class for Person class 
+ * - addDemeritPoints function
  * Contains 5 test cases for addDemeritPoints function
+ * - updatePersonalDetails fnction
+ * Contains 5 test cases for updatePersonalDetails function
+ * - addPerson fnction
+ * Contains 5 test cases for addPerson function
+ * 
  * Assignment 4 - RoadRegistry Person Management System
  */
 public class PersonTest {
@@ -346,11 +352,14 @@ public class PersonTest {
      *   - Person: ("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-2010")
      *   - Update: change address only
      * Expected Result: false (update should fail)
+     * @throws InterruptedException 
      */
     @Test
-    public void testUpdatePersonalDetails_Under18CannotChangeAddress() {
+    public void testUpdatePersonalDetails_Under18CannotChangeAddress() throws InterruptedException {
         Person person = new Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-2010"); //Under 18 years
         person.addPerson(PERSON_FILE);
+        Thread.sleep(500);
+
         assertFalse(person.updatePersonalDetails(
             "56s_d%&fAB",
             "John",
@@ -367,11 +376,14 @@ public class PersonTest {
      *   - Person: ("56s_d%&fAB", "Alice", "Smith", "123|Main Street|Melbourne|Victoria|3000", "01-01-2000")
      *   - Update: change last name and birthdate
      * Expected Result: false (update should fail)
+     * @throws InterruptedException 
      */
     @Test
-    public void testUpdatePersonalDetails_BirthdateAndOtherChangeAttempt() {
+    public void testUpdatePersonalDetails_BirthdateAndOtherChangeAttempt() throws InterruptedException {
         Person person = new Person("56s_d%&fAB", "Alice", "Smith", "123|Main Street|Melbourne|Victoria|3000", "01-01-2000");
         person.addPerson(PERSON_FILE);
+        Thread.sleep(500);
+
         boolean result = person.updatePersonalDetails(
             "56s_d%&fAB",                                 
             "Alice",                                     
@@ -391,11 +403,14 @@ public class PersonTest {
      *   - Person: ("46s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990")
      *   - Update: change ID only
      * Expected Result: false (update should fail)
+     * @throws InterruptedException 
      */
     @Test
-    public void testUpdatePersonalDetails_EvenFirstDigitCannotChangeID() {
+    public void testUpdatePersonalDetails_EvenFirstDigitCannotChangeID() throws InterruptedException {
         Person person = new Person("46s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990");
         person.addPerson(PERSON_FILE);
+        Thread.sleep(500);
+
         assertFalse(person.updatePersonalDetails(
             "56s_d%&fAB",               // Attempt to change ID even though the original started with an even digit
             "John",         
@@ -413,11 +428,18 @@ public class PersonTest {
      *   - Person: ("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990")
      *   - Update: ("56s_d%&fAB", "Veronica", "Donovan", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990")same details as original
      * Expected Result: true (update should still work)
+     * @throws InterruptedException 
      */
     @Test
-    public void testUpdatePersonalDetails_ChangeFullName() {
+    public void testUpdatePersonalDetails_ChangeFullNameMultipleEntries() throws InterruptedException {
         Person person = new Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990");
         person.addPerson(PERSON_FILE);
+        Thread.sleep(500);
+
+        // Person person2 = new Person("78s_d%&fAC", "Katherine", "Jobs", "234|Kingsway Rd|Melbourne|Victoria|Australia","19-20-2004");
+        // person2.addPerson(PERSON_FILE);
+        // Thread.sleep(500);
+
         assertTrue(person.updatePersonalDetails(
             "56s_d%&fAB",   // SAME
             "Veronica",     // SAME
@@ -436,11 +458,14 @@ public class PersonTest {
      *   - Person: ("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990")
      *   - Update: invalid address format
      * Expected Result: false (update should fail)
+     * @throws InterruptedException 
      */
     @Test
-    public void testUpdatePersonalDetails_InvalidAddressFormat() {
+    public void testUpdatePersonalDetails_InvalidAddressFormat() throws InterruptedException {
         Person person = new Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990");
         person.addPerson(PERSON_FILE);
+        Thread.sleep(500);
+
         assertFalse(person.updatePersonalDetails(
             "56s_d%&fAB",
             "John",
