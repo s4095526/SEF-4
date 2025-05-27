@@ -47,23 +47,33 @@ public class Person {
         
         //the information should be inserted into a TXT file, and the addPerson function should return true.
         //Otherwise, the information should not be inserted into the TXT file, and the addPerson function should return false.
+        // Validate personID: exactly 10 characters
         if (personID.length() != 10) {
-            return false; // not 10 characters long
+            return false;
         }
-
-        if (!personID.matches("[2-9][0-9].6[A-Z]{2}")) {
-            return false; // the placement of charcaters does not match expected 
+        // First two characters should be digits between 2 and 9
+        if (!Character.isDigit(personID.charAt(0)) || !Character.isDigit(personID.charAt(1))) {
+            return false;
         }
-
+        int firstDigit = Character.getNumericValue(personID.charAt(0));
+        int secondDigit = Character.getNumericValue(personID.charAt(1));
+        if (firstDigit < 2 || firstDigit > 9 || secondDigit < 2 || secondDigit > 9) {
+            return false;
+        }
+        // At least two special characters between characters 3 and 8 (index 2 to 7)
+        int specialCount = 0;
         for (int i = 2; i < 8; i++) {
-            int count = 0;
             char c = personID.charAt(i);
             if (!Character.isLetterOrDigit(c)) {
-                count ++; 
+                specialCount++;
             }
-            if (count < 2) {
-                return false; // not enough special characters
-            }
+        }
+        if (specialCount < 2) {
+            return false;
+        }
+        // Last two characters should be uppercase letters (A-Z)
+        if (!Character.isUpperCase(personID.charAt(8)) || !Character.isUpperCase(personID.charAt(9))) {
+            return false;
         }
 
         if (!address.matches("\\d+\\|[^|]+\\|[^|]+\\|Victoria\\|[^|]+")) {
@@ -87,16 +97,12 @@ public class Person {
         }
        
         // txt file writing now ** NOT FINISHED **
-        String fileTxt = "PersonID: " + personID + "\n" +
-                            "First Name: " + firstName + "\n" +
-                            "Last Name: " + lastName + "\n" +
-                            "Address: " + address + "\n" +
-                            "Birthdate: " + birthdate + "\n";
-        System.out.println("Writing to file: \n" + fileTxt);
+        
+        String filetxt = personID + "|" + firstName + "|" + lastName + "|" + address + "|" + birthdate + "|" + isSuspended + "\n";
         
         try {
             try (FileWriter fileWriter = new FileWriter(fileName, true)) {
-                fileWriter.write(fileTxt);
+                fileWriter.write(filetxt);
             }
         } catch (Exception e) {
             System.out.println("Could not create or write to file: " + e.getMessage());
@@ -147,7 +153,7 @@ public class Person {
         if (newID.length() != 10){
             return false;
         }
-        if (!newID.matches("[2-9][0-9].*[^a-zA-Z0-9].*[^a-sA-Z0-9].*[A-Z]{2}")){
+        if (!newID.matches("[2-9][0-9].*[^a-zA-Z0-9].*[^A-Z0-9].*[A-Z]{2}")){
             return false;
         }
         
@@ -180,6 +186,7 @@ public class Person {
         }
 
         //All validations passed
+        String originalID = this.personID;
         this.personID = newID;
         this.firstName = newFirstName;
         this.lastName = newLastName;
@@ -187,10 +194,10 @@ public class Person {
         this.birthdate = newBirthdate;
 
         // Update the file
-        return updatePersonInFile();
+        return updatePersonInFile(originalID);
     }
 
-    private boolean updatePersonInFile () {
+    private boolean updatePersonInFile (String originalID) {
         try {
             // read all persons
             List<String> lines = new ArrayList<>();
@@ -200,7 +207,7 @@ public class Person {
                 String line;
                 while ((line = reader.readLine()) != null){
                     String[] parts = line.split("\\|");
-                    if (parts.length >= 6 && parts[0].equals(this.personID)) {
+                    if (parts.length >= 6 && parts[0].equals(originalID)) {
                         //Update record
                         line = String.join("|", this.personID, this.firstName, this.lastName, this.address, this.birthdate, String.valueOf(this.isSuspended));
                         personFound = true;
@@ -308,7 +315,7 @@ public class Person {
      * @param personID the person ID to check
      * @return true if person exists, false otherwise
      */
-    private boolean personExists(String personID) {
+    protected boolean personExists(String personID) {
         if (personID == null) {
             return false;
         }
