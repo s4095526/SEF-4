@@ -30,11 +30,11 @@ jobs:
         # Maven is a build automation tool used primarily for Java projects.
         # The tests are defined in your project's source code and will be executed by Maven.
 
-      - name: Display test-generated txt file contents
-        if: always() #always runs even if it fails
-        run: |
-          echo "=== TXT File in Repo ==="
-          done
+      # - name: Display test-generated txt file contents
+      #   if: always() #always runs even if it fails
+      #   run: |
+      #     echo "=== TXT File in Repo ==="
+      #     done
 
       # - name: Upload all .txt files in root
       #   if: always()
