@@ -40,8 +40,8 @@ public class PersonTest {
             Thread.sleep(500);
 
             // Clean up files before each test
-            // deleteFileIfExists(PERSON_FILE);
-            // deleteFileIfExists(DEMERIT_FILE);
+            deleteFileIfExists(PERSON_FILE);
+            deleteFileIfExists(DEMERIT_FILE);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

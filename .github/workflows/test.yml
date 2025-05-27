@@ -29,19 +29,6 @@ jobs:
         # This step runs the command mvn test, which is a Maven command to run the tests in your project.
         # Maven is a build automation tool used primarily for Java projects.
         # The tests are defined in your project's source code and will be executed by Maven.
-
-      # - name: Display test-generated txt file contents
-      #   if: always() #always runs even if it fails
-      #   run: |
-      #     echo "=== TXT File in Repo ==="
-      #     done
-
-      # - name: Upload all .txt files in root
-      #   if: always()
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: root-txt-files
-      #     path: "*.txt"
  
   another-job:
     runs-on: ubuntu-latest
