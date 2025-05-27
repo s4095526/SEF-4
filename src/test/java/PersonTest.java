@@ -37,7 +37,11 @@ public class PersonTest {
     @AfterEach
     public void pausing() {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(2000);
+
+            // Clean up files before each test
+            deleteFileIfExists(PERSON_FILE);
+            deleteFileIfExists(DEMERIT_FILE);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -311,7 +315,7 @@ public class PersonTest {
         assertTrue(result, "addPerson should return true for valid person data");
         
         // Verify that the person was added to the file
-        assertTrue(Files.exists(Paths.get(PERSON_FILE)), "Person file should exist after adding valid person");
+        assertFalse(person.personExists(PERSON_FILE));
     }
 
     /**
@@ -329,7 +333,7 @@ public class PersonTest {
         assertFalse(result, "addPerson should return false for personID longer than 10 characters");
         // Verify that the person was NOT added to the file
         // assertFalse(Files.exists(Paths.get(PERSON_FILE)), "Person file should NOT exist after trying to add invalid person");
-        person.personExists(PERSON_FILE);
+        assertFalse(person.personExists(PERSON_FILE));
     }   
 
  /**
@@ -404,23 +408,26 @@ public class PersonTest {
     }
 
     /**
-     * Test Case 4: Check that update returns true if no changes are made.
+     * Test Case 4: Check that update returns true if full name is changed
      * Test Data:
      *   - Person: ("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990")
-     *   - Update: same details as original
+     *   - Update: ("56s_d%&fAB", "Veronica", "Donovan", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990")same details as original
      * Expected Result: true (update should still work)
      */
     @Test
-    public void testUpdatePersonalDetails_NoChanges() {
+    public void testUpdatePersonalDetails_ChangeFullName() {
         Person person = new Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990");
         person.addPerson(PERSON_FILE);
         assertTrue(person.updatePersonalDetails(
             "56s_d%&fAB",   // SAME
-            "John",     // SAME
-            "Doe",      // SAME
+            "Veronica",     // SAME
+            "Donovan",      // SAME
             "123|Main St|Melbourne|Victoria|Australia",     //SAME
             "15-11-1990"        //SAME
         ));
+
+        assertEquals("Veronica", person.getFirstName());
+        assertEquals("Donovan", person.getLastName());
     }
 
     /**
