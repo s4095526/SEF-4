@@ -13,6 +13,16 @@ public class PersonTest {
     private Person person;
     private static final String PERSON_FILE = "persons.txt";
     private static final String DEMERIT_FILE = "demerit_points.txt";
+   
+    // create persons.txt and demerit_points.txt files before running tests
+    static {
+        try {
+            Files.createFile(Paths.get(PERSON_FILE));
+            Files.createFile(Paths.get(DEMERIT_FILE));
+        } catch (IOException e) {
+            System.out.println("Could not create test files: " + e.getMessage());
+        }
+    }
     
     @BeforeEach
     public void setUp() {
