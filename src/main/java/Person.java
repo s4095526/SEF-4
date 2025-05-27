@@ -186,6 +186,7 @@ public class Person {
         }
 
         //All validations passed
+        String originalID = this.personID;
         this.personID = newID;
         this.firstName = newFirstName;
         this.lastName = newLastName;
@@ -193,10 +194,10 @@ public class Person {
         this.birthdate = newBirthdate;
 
         // Update the file
-        return updatePersonInFile();
+        return updatePersonInFile(originalID);
     }
 
-    private boolean updatePersonInFile () {
+    private boolean updatePersonInFile (String originalID) {
         try {
             // read all persons
             List<String> lines = new ArrayList<>();
@@ -206,7 +207,7 @@ public class Person {
                 String line;
                 while ((line = reader.readLine()) != null){
                     String[] parts = line.split("\\|");
-                    if (parts.length >= 6 && parts[0].equals(this.personID)) {
+                    if (parts.length >= 6 && parts[0].equals(originalID)) {
                         //Update record
                         line = String.join("|", this.personID, this.firstName, this.lastName, this.address, this.birthdate, String.valueOf(this.isSuspended));
                         personFound = true;
