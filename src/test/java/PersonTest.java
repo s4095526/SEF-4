@@ -36,15 +36,15 @@ public class PersonTest {
 
     @AfterEach
     public void pausing() {
-        try {
-            Thread.sleep(500);
+        // try {
+        //     Thread.sleep(500);
 
             // Clean up files before each test
             deleteFileIfExists(PERSON_FILE);
             deleteFileIfExists(DEMERIT_FILE);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // } catch (InterruptedException e) {
+        //     e.printStackTrace();
+        // }
     }
 
     /**
