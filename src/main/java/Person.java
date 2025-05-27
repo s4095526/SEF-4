@@ -90,7 +90,7 @@ public class Person {
         return true;
     }
     
-    public boolean updatePersonalDetails(String newID, String newFirstName, String newLastName, String newAddress, String newBirthdate) {
+    public boolean updatePersonalDetails(String oldID, String newID, String newFirstName, String newLastName, String newAddress, String newBirthdate) {
         //This method allows updating a given person's ID, firstName, lastName, address and birthday in a TXT file.
         //Changing personal details will not affect their demerit points or the suspension status.
         // All relevant conditions discussed for the addPerson function also need to be considered and checked in the updatePerson function.
@@ -163,7 +163,6 @@ public class Person {
         }
 
         //All validations passed
-        String originalID = this.personID;
         this.personID = newID;
         this.firstName = newFirstName;
         this.lastName = newLastName;
@@ -171,7 +170,7 @@ public class Person {
         this.birthdate = newBirthdate;
 
         // Update the file
-        return updatePersonInFile(originalID);
+        return updatePersonInFile(oldID);
     }
 
     private boolean updatePersonInFile (String originalID) {

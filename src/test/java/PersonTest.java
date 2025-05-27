@@ -362,6 +362,7 @@ public class PersonTest {
 
         assertFalse(person.updatePersonalDetails(
             "56s_d%&fAB",
+            "56s_d%&fAB",
             "John",
             "Doe",
             "456|New St|Melbourne|Victoria|Australia",      // changed Address
@@ -385,6 +386,7 @@ public class PersonTest {
         Thread.sleep(500);
 
         boolean result = person.updatePersonalDetails(
+            "56s_d%&fAB",
             "56s_d%&fAB",                                 
             "Alice",                                     
             "Johnson",                                     // changed last name
@@ -412,6 +414,7 @@ public class PersonTest {
         Thread.sleep(500);
 
         assertFalse(person.updatePersonalDetails(
+            "46s_d%&fAB",
             "56s_d%&fAB",               // Attempt to change ID even though the original started with an even digit
             "John",         
             "Doe",
@@ -436,11 +439,12 @@ public class PersonTest {
         person.addPerson(PERSON_FILE);
         Thread.sleep(500);
 
-        // Person person2 = new Person("78s_d%&fAC", "Katherine", "Jobs", "234|Kingsway Rd|Melbourne|Victoria|Australia","19-20-2004");
-        // person2.addPerson(PERSON_FILE);
-        // Thread.sleep(500);
+        Person person2 = new Person("78s_d%&fAC", "Katherine", "Jobs", "234|Kingsway Rd|Melbourne|Victoria|Australia","19-20-2004");
+        person2.addPerson(PERSON_FILE);
+        Thread.sleep(500);
 
         assertTrue(person.updatePersonalDetails(
+            "56s_d%&fAB",
             "56s_d%&fAB",   // SAME
             "Veronica",     // SAME
             "Donovan",      // SAME
@@ -467,6 +471,7 @@ public class PersonTest {
         Thread.sleep(500);
 
         assertFalse(person.updatePersonalDetails(
+            "56s_d%&fAB",
             "56s_d%&fAB",
             "John",
             "Doe",
