@@ -30,6 +30,14 @@ jobs:
         # Maven is a build automation tool used primarily for Java projects.
         # The tests are defined in your project's source code and will be executed by Maven.
  
+      - name: Upload text files as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: text-files-artifact
+          path: |
+            persons.txt
+            demerit_points.txt
+          
   another-job:
     runs-on: ubuntu-latest
     steps:
