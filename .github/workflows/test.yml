@@ -38,10 +38,11 @@ jobs:
             persons.txt
             demerit_points.txt
 
-      - name: Print contents of file
-        run: |
-          cat persons.txt
-          cat demerit_points.txt
+      - name: Print contents of PERSON_FILE
+        run: cat persons.txt
+
+      - name: Print contents of DEMERIT_FILE
+        run: cat demerit_points.txt
           
   another-job:
     runs-on: ubuntu-latest
