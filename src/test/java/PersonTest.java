@@ -43,41 +43,6 @@ public class PersonTest {
         }
     }
     
-    // @BeforeEach
-    // public void setUp() {
-    //     // Clean up files before each test
-    //     deleteFileIfExists(PERSON_FILE);
-    //     deleteFileIfExists(DEMERIT_FILE);
-        
-    //     // Initialise person object for testing
-    //     person = new Person();
-    // }
-
-    // @AfterEach
-    // public void pausing() {
-    //     try {
-    //         Thread.sleep(1000);
-
-    //         // Clean up files before each test
-    //         deleteFileIfExists(PERSON_FILE);
-    //         deleteFileIfExists(DEMERIT_FILE);
-    //     } catch (InterruptedException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
-
-    // /**
-    //  * Helper method to delete files if they exist
-    //  * @param filename name of file to delete
-    //  */
-    // private void deleteFileIfExists(String filename) {
-    //     try {
-    //         Files.deleteIfExists(Paths.get(filename));
-    //     } catch (IOException e) {
-    //         System.out.println("Could not delete file: " + filename);
-    //     }
-    // }
-    
     // TEST CASES FOR addDemeritPoints() FUNCTION
     
     /**
