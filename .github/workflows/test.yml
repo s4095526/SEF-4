@@ -37,6 +37,11 @@ jobs:
           path: |
             persons.txt
             demerit_points.txt
+
+      - name: Print contents of file
+        run: |
+          cat persons.txt
+          cat demerit_points.txt
           
   another-job:
     runs-on: ubuntu-latest
