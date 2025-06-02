@@ -48,31 +48,9 @@ public class Person {
         //the information should be inserted into a TXT file, and the addPerson function should return true.
         //Otherwise, the information should not be inserted into the TXT file, and the addPerson function should return false.
         // Validate personID: exactly 10 characters
-        if (personID.length() != 10) {
-            return false;
-        }
-        // First two characters should be digits between 2 and 9
-        if (!Character.isDigit(personID.charAt(0)) || !Character.isDigit(personID.charAt(1))) {
-            return false;
-        }
-        int firstDigit = Character.getNumericValue(personID.charAt(0));
-        int secondDigit = Character.getNumericValue(personID.charAt(1));
-        if (firstDigit < 2 || firstDigit > 9 || secondDigit < 2 || secondDigit > 9) {
-            return false;
-        }
-        // At least two special characters between characters 3 and 8 (index 2 to 7)
-        int specialCount = 0;
-        for (int i = 2; i < 8; i++) {
-            char c = personID.charAt(i);
-            if (!Character.isLetterOrDigit(c)) {
-                specialCount++;
-            }
-        }
-        if (specialCount < 2) {
-            return false;
-        }
-        // Last two characters should be uppercase letters (A-Z)
-        if (!Character.isUpperCase(personID.charAt(8)) || !Character.isUpperCase(personID.charAt(9))) {
+        boolean isValidID = false;
+        isValidID = validateID(personID);
+        if (isValidID == false){
             return false;
         }
 
@@ -112,7 +90,7 @@ public class Person {
         return true;
     }
     
-    public boolean updatePersonalDetails(String newID, String newFirstName, String newLastName, String newAddress, String newBirthdate) {
+    public boolean updatePersonalDetails(String oldID, String newID, String newFirstName, String newLastName, String newAddress, String newBirthdate) {
         //This method allows updating a given person's ID, firstName, lastName, address and birthday in a TXT file.
         //Changing personal details will not affect their demerit points or the suspension status.
         // All relevant conditions discussed for the addPerson function also need to be considered and checked in the updatePerson function.
@@ -150,10 +128,9 @@ public class Person {
 
         //Validate all new fields meet the same conditions as addPerson
         //Validate newID
-        if (newID.length() != 10){
-            return false;
-        }
-        if (!newID.matches("[2-9][0-9].*[^a-zA-Z0-9].*[^a-sA-Z0-9].*[A-Z]{2}")){
+        boolean isValidID = false;
+        isValidID = validateID(newID);
+        if (isValidID == false){
             return false;
         }
         
@@ -193,10 +170,10 @@ public class Person {
         this.birthdate = newBirthdate;
 
         // Update the file
-        return updatePersonInFile();
+        return updatePersonInFile(oldID);
     }
 
-    private boolean updatePersonInFile () {
+    private boolean updatePersonInFile (String originalID) {
         try {
             // read all persons
             List<String> lines = new ArrayList<>();
@@ -206,7 +183,7 @@ public class Person {
                 String line;
                 while ((line = reader.readLine()) != null){
                     String[] parts = line.split("\\|");
-                    if (parts.length >= 6 && parts[0].equals(this.personID)) {
+                    if (parts.length >= 6 && parts[0].equals(originalID)) {
                         //Update record
                         line = String.join("|", this.personID, this.firstName, this.lastName, this.address, this.birthdate, String.valueOf(this.isSuspended));
                         personFound = true;
@@ -314,7 +291,7 @@ public class Person {
      * @param personID the person ID to check
      * @return true if person exists, false otherwise
      */
-    private boolean personExists(String personID) {
+    protected boolean personExists(String personID) {
         if (personID == null) {
             return false;
         }
@@ -474,6 +451,40 @@ public class Person {
             System.out.println("Error updating person suspension status: " + e.getMessage());
             return false;
         }
+    }
+
+    /* VALIDATE Person ID */
+    private boolean validateID(String ID) {
+        // Validate personID: exactly 10 characters
+        if (personID.length() != 10) {
+            return false;
+        }
+        // First two characters should be digits between 2 and 9
+        if (!Character.isDigit(personID.charAt(0)) || !Character.isDigit(personID.charAt(1))) {
+            return false;
+        }
+        int firstDigit = Character.getNumericValue(personID.charAt(0));
+        int secondDigit = Character.getNumericValue(personID.charAt(1));
+        if (firstDigit < 2 || firstDigit > 9 || secondDigit < 2 || secondDigit > 9) {
+            return false;
+        }
+        // At least two special characters between characters 3 and 8 (index 2 to 7)
+        int specialCount = 0;
+        for (int i = 2; i < 8; i++) {
+            char c = personID.charAt(i);
+            if (!Character.isLetterOrDigit(c)) {
+                specialCount++;
+            }
+        }
+        if (specialCount < 2) {
+            return false;
+        }
+        // Last two characters should be uppercase letters (A-Z)
+        if (!Character.isUpperCase(personID.charAt(8)) || !Character.isUpperCase(personID.charAt(9))) {
+            return false;
+        }
+
+        return true;
     }
 
     // Getters and Setters

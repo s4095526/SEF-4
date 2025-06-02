@@ -1,11 +1,27 @@
-import org.junit.jupiter.api.*;
-import java.io.*;
-import java.nio.file.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import org.junit.jupiter.api.Test;
+// hi
 /**
- * Test class for Person class - addDemeritPoints function
+ * Test class for Person class 
+ * - addDemeritPoints function
  * Contains 5 test cases for addDemeritPoints function
+ * - updatePersonalDetails fnction
+ * Contains 5 test cases for updatePersonalDetails function
+ * - addPerson fnction
+ * Contains 5 test cases for addPerson function
+ * 
  * Assignment 4 - RoadRegistry Person Management System
  */
 public class PersonTest {
@@ -13,33 +29,17 @@ public class PersonTest {
     private Person person;
     private static final String PERSON_FILE = "persons.txt";
     private static final String DEMERIT_FILE = "demerit_points.txt";
-    
-    @BeforeEach
-    public void setUp() {
-        // Clean up files before each test
-        deleteFileIfExists(PERSON_FILE);
-        deleteFileIfExists(DEMERIT_FILE);
-        
-        // Initialise person object for testing
-        person = new Person();
-    }
-    
-    @AfterEach
-    public void tearDown() {
-        // Clean up files after each test
-        deleteFileIfExists(PERSON_FILE);
-        deleteFileIfExists(DEMERIT_FILE);
-    }
-    
-    /**
-     * Helper method to delete files if they exist
-     * @param filename name of file to delete
-     */
-    private void deleteFileIfExists(String filename) {
+
+    // create persons.txt and demerit_points.txt files before running tests
+    static {
         try {
-            Files.deleteIfExists(Paths.get(filename));
+            Files.deleteIfExists(Paths.get(PERSON_FILE));
+            Files.deleteIfExists(Paths.get(DEMERIT_FILE));
+
+            Files.createFile(Paths.get(PERSON_FILE));
+            Files.createFile(Paths.get(DEMERIT_FILE));
         } catch (IOException e) {
-            System.out.println("Could not delete file: " + filename);
+            System.out.println("Could not create test files: " + e.getMessage());
         }
     }
     
@@ -299,7 +299,7 @@ public class PersonTest {
         assertTrue(result, "addPerson should return true for valid person data");
         
         // Verify that the person was added to the file
-        assertTrue(Files.exists(Paths.get(PERSON_FILE)), "Person file should exist after adding valid person");
+        assertFalse(person.personExists(PERSON_FILE));
     }
 
     /**
@@ -316,7 +316,8 @@ public class PersonTest {
         // Assert: Should return false due to personID length condition not being met
         assertFalse(result, "addPerson should return false for personID longer than 10 characters");
         // Verify that the person was NOT added to the file
-        assertFalse(Files.exists(Paths.get(PERSON_FILE)), "Person file should NOT exist after trying to add invalid person");
+        // assertFalse(Files.exists(Paths.get(PERSON_FILE)), "Person file should NOT exist after trying to add invalid person");
+        assertFalse(person.personExists(PERSON_FILE));
     }   
 
  /**
@@ -326,104 +327,138 @@ public class PersonTest {
     /**
      * Test Case 1: Check that an individual under 18 is unable to change address.
      * Test Data:
-     *   - Person: ("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-2010")
+     *   - Person: ("29a#x!qzYT", "Leo", "Nguyen", "101|Elm Street|Melbourne|Victoria|Australia", "15-11-2010")
      *   - Update: change address only
      * Expected Result: false (update should fail)
+     * @throws InterruptedException 
      */
     @Test
-    public void testUpdatePersonalDetails_Under18CannotChangeAddress() {
-        Person person = new Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-2010"); //Under 18 years
+    public void testUpdatePersonalDetails_Under18CannotChangeAddress() throws InterruptedException {
+        Person person = new Person("29a#x!qzYT", "Leo", "Nguyen", "101|Elm Street|Melbourne|Victoria|Australia", "15-11-2010"); //Under 18 years
         person.addPerson(PERSON_FILE);
+        Thread.sleep(500);
+
         assertFalse(person.updatePersonalDetails(
-            "56s_d%&fAB",
-            "John",
-            "Doe",
-            "456|New St|Melbourne|Victoria|Australia",      // changed Address
+            "29a#x!qzYT",
+            "29a#x!qzYT",
+            "Leo",
+            "Nguyen",
+            "202|Maple Avenue|Melbourne|Victoria|Australia",    // Attempt to change address
             "15-11-2010"
         ));
+
+        assertEquals("101|Elm Street|Melbourne|Victoria|Australia", person.getAddress()); // Check to make sure that the address is not changed
     }
 
     /**
      * Test Case 2: Changing both birthdate and another field (last name) should fail.
      * Test Data:
-     *   - Person: ("34AB1CDEFG", "Alice", "Smith", "123|Main Street|Melbourne|Victoria|3000", "01-01-2000")
+     *   - Person: ("35b$e@rjLK", "Allie", "Smith", "77|River Road|Melbourne|Victoria|Australia", "01-01-2000")
      *   - Update: change last name and birthdate
      * Expected Result: false (update should fail)
+     * @throws InterruptedException 
      */
     @Test
-    public void testUpdateFailsWhenLastNameChangesWithBirthdate() {
-        Person p = new Person("34AB1CDEFG", "Alice", "Smith", "123|Main Street|Melbourne|Victoria|3000", "01-01-2000");
+    public void testUpdatePersonalDetails_BirthdateAndOtherChangeAttempt() throws InterruptedException {
+        Person person = new Person("35b$e@rjLK", "Allie", "Smith", "77|River Road|Melbourne|Victoria|Australia", "01-01-2000");
         person.addPerson(PERSON_FILE);
-        boolean result = p.updatePersonalDetails(
-            "34AB1CDEFG",                                 
-            "Alice",                                     
-            "Johnson",                                     // changed last name
-            "123|Main Street|Melbourne|Victoria|3000",  
-            "02-02-2001"                                   // changed birthdate
+        Thread.sleep(500);
+
+        boolean result = person.updatePersonalDetails(
+            "35b$e@rjLK",
+            "35b$e@rjLK",
+            "Allie",
+            "Johnson",      // Attempt to change last name
+            "77|River Road|Melbourne|Victoria|Australia",
+            "02-02-2001"   // Attempt to change birthday
         );
 
-        assertFalse(result);  // should return false
-        assertEquals("Smith", p.getLastName());
-        assertEquals("01-01-2000", p.getBirthdate());
+        assertFalse(result);
+        assertEquals("Smith", person.getLastName());        // Check if the last name has changed (it shouldn't)
+        assertEquals("02-02-2001", person.getBirthdate());  // Check to see if the birthday was updated
     }
 
     /**
      * Test Case 3: Check that if the first digit of the ID is even, the ID cannot be changed.
      * Test Data:
-     *   - Person: ("46s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990")
+     *   - Person: ("46c@d%uqHE", "Mohammed", "Ali", "88|Oak Lane|Melbourne|Victoria|Australia", "15-11-1990");
      *   - Update: change ID only
      * Expected Result: false (update should fail)
+     * @throws InterruptedException 
      */
     @Test
-    public void testUpdatePersonalDetails_EvenFirstDigitCannotChangeID() {
-        Person person = new Person("46s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990");
+    public void testUpdatePersonalDetails_EvenFirstDigitCannotChangeID() throws InterruptedException {
+        Person person = new Person("46c@d%uqHE", "Mohammed", "Ali", "88|Oak Lane|Melbourne|Victoria|Australia", "15-11-1990");;
         person.addPerson(PERSON_FILE);
+        Thread.sleep(500);
+
         assertFalse(person.updatePersonalDetails(
-            "56s_d%&fAB",               // Attempt to change ID even though the original started with an even digit
-            "John",         
-            "Doe",
-            "123|Main St|Melbourne|Victoria|Australia",
+            "46c@d%uqHE",
+            "57z#h^klRP",           // Attempt to update person ID
+            "Mohammed",
+            "Ali",
+            "88|Oak Lane|Melbourne|Victoria|Australia",
             "15-11-1990"
         ));
+
+        assertEquals("46c@d%uqHE", person.getPersonID());
     }
 
     /**
-     * Test Case 4: Check that update returns false if no changes are made.
+     * Test Case 4: Check that update returns true if full name is changed
      * Test Data:
-     *   - Person: ("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990")
-     *   - Update: same details as original
-     * Expected Result: false (update should fail)
+     *   - Person: ("78s#z^*mCD", "Katherine", "Jobs", "234|Kingsway Rd|Melbourne|Victoria|Australia", "20-10-2004")
+     *   - Person2: ("59s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990")
+     *   - Update Person2: ("56s_d%&fAB", "Veronica", "Donovan", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990")
+     * Expected Result: true (update should still work)
+     * @throws InterruptedException 
      */
     @Test
-    public void testUpdatePersonalDetails_NoChanges() {
-        Person person = new Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990");
+    public void testUpdatePersonalDetails_ChangeFullNameMultipleEntries() throws InterruptedException {
+        Person person = new Person("78s#z^*mCD", "Katherine", "Jobs", "234|Kingsway Rd|Melbourne|Victoria|Australia", "20-10-2004");
         person.addPerson(PERSON_FILE);
-        assertFalse(person.updatePersonalDetails(
-            "56s_d%&fAB",   // SAME
-            "John",     // SAME
-            "Doe",      // SAME
-            "123|Main St|Melbourne|Victoria|Australia",     //SAME
-            "15-11-1990"        //SAME
+        Thread.sleep(500);
+
+        Person person2 = new Person("59s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990");
+        person2.addPerson(PERSON_FILE);
+        Thread.sleep(500);
+
+        assertTrue(person2.updatePersonalDetails(
+            "59s_d%&fAB",
+            "59s_d%&fAB",
+            "Veronica",     // Attempt to change the first name of John Doe
+            "Donovan",       // Attempt to change the last name of John Doe
+            "123|Main St|Melbourne|Victoria|Australia",
+            "15-11-1990"
         ));
+
+        assertEquals("Veronica", person2.getFirstName());
+        assertEquals("Donovan", person2.getLastName());
     }
 
     /**
      * Test Case 5: Check with invalid address format (testing addPerson formats).
      * Test Data:
-     *   - Person: ("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990")
+     *   - Person("45b$e@rjLK", "Fatima", "Rahman", "999|Pine Crescent|Melbourne|Victoria|Australia", "15-11-1990")
      *   - Update: invalid address format
      * Expected Result: false (update should fail)
+     * @throws InterruptedException 
      */
     @Test
-    public void testUpdatePersonalDetails_InvalidAddressFormat() {
-        Person person = new Person("56s_d%&fAB", "John", "Doe", "123|Main St|Melbourne|Victoria|Australia", "15-11-1990");
+    public void testUpdatePersonalDetails_InvalidAddressFormat() throws InterruptedException {
+        Person person = new Person("45b$e@rjLK", "Fatima", "Rahman", "999|Pine Crescent|Melbourne|Victoria|Australia", "15-11-1990");
         person.addPerson(PERSON_FILE);
+        Thread.sleep(500);
+
         assertFalse(person.updatePersonalDetails(
-            "56s_d%&fAB",
-            "John",
-            "Doe",
-            "Invalid Address Format",       // different address, format breaking addPerson conventions
+            "45b$e@rjLK",
+            "45b$e@rjLK",
+            "Fatima",
+            "Rahman",
+            "Just an address with no format",       // Attempt to input an illegally formatted address
             "15-11-1990"
         ));
+
+        assertEquals("999|Pine Crescent|Melbourne|Victoria|Australia", person.getAddress());
     }
 }

@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
-    branches: [ "main" ] # Trigger the workflow on push events
+    branches: [ "main" ]
 jobs:
   java-test: # Job name
     runs-on: ubuntu-latest # Configures the job to run on the latest version of an Ubuntu Linux runner.  
@@ -30,6 +30,20 @@ jobs:
         # Maven is a build automation tool used primarily for Java projects.
         # The tests are defined in your project's source code and will be executed by Maven.
  
+      - name: Upload text files as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: text-files-artifact
+          path: |
+            persons.txt
+            demerit_points.txt
+
+      - name: Print contents of PERSON_FILE
+        run: cat persons.txt
+
+      - name: Print contents of DEMERIT_FILE
+        run: cat demerit_points.txt
+          
   another-job:
     runs-on: ubuntu-latest
     steps:
