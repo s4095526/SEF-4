@@ -42,40 +42,43 @@ public class Person {
     }
 
     public boolean addPerson(String fileName) {
-        //TODO: This method adds information about a person to a TXT file.
-        //TODO: file name beign written too and if the file exists or not
-        
-        //the information should be inserted into a TXT file, and the addPerson function should return true.
-        //Otherwise, the information should not be inserted into the TXT file, and the addPerson function should return false.
         // Validate personID: exactly 10 characters
         boolean isValidID = false;
         isValidID = validateID(personID);
-        if (isValidID == false){
+        if (!isValidID){
+            System.out.println("Error: Invalid personID - must be 10 characters, first two digits 2-9, at least two special characters between 3rd-8th, last two uppercase letters.");
             return false;
         }
 
         if (!address.matches("\\d+\\|[^|]+\\|[^|]+\\|Victoria\\|[^|]+")) {
+            System.out.println("Error: Invalid address format or state is not Victoria.");
             return false; // address format is incorrect
         }
 
         if (!birthdate.matches("\\d{2}-\\d{2}-\\d{4}")) {
+            System.out.println("Error: Invalid birthdate format. Expected DD-MM-YYYY.");
             return false; // birthdate format is incorrect
         }
 
-        if (Integer.parseInt(birthdate.substring(6)) < 1900 || Integer.parseInt(birthdate.substring(6)) > 2025) {
+        int year = Integer.parseInt(birthdate.substring(6));
+        if (year < 1900 || year > 2025) {
+            System.out.println("Error: Invalid birth year. Must be between 1900 and 2025.");
             return false; // birth year is not valid
         }
 
-        if (Integer.parseInt(birthdate.substring(3, 5)) < 1 || Integer.parseInt(birthdate.substring(3, 5)) > 12) {
+        int month = Integer.parseInt(birthdate.substring(3, 5));
+        if (month < 1 || month > 12) {
+            System.out.println("Error: Invalid birth month. Must be between 1 and 12.");
             return false; // month is not valid
         }
 
-        if (Integer.parseInt(birthdate.substring(0, 2)) < 1 || Integer.parseInt(birthdate.substring(0, 2)) > 31) {
+        int day = Integer.parseInt(birthdate.substring(0, 2));
+        if (day < 1 || day > 31) {
+            System.out.println("Error: Invalid birth day. Must be between 1 and 31.");
             return false; // day is not valid
         }
        
         // txt file writing now ** NOT FINISHED **
-        
         String filetxt = personID + "|" + firstName + "|" + lastName + "|" + address + "|" + birthdate + "|" + isSuspended + "\n";
         
         try {
